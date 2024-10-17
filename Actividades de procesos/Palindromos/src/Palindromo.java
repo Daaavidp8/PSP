@@ -18,6 +18,26 @@ public class Palindromo {
             longitud--;
         }
 
-        System.out.println(isPalindroma ? "Es Palindroma" : "No es Palindroma");
+        GuardarPalabra(isPalindroma ? "palindromos.txt": "nopalindromos.txt",palabra);
+        GuardarPalabra("Allwords.txt",palabra);
+    }
+
+    public static void GuardarPalabra(String fichero, String palabra) throws IOException {
+        try {
+            final String dir = System.getProperty("user.dir");
+            String dirFile = dir + "/" + fichero;
+            File myObj = new File(dirFile);
+            if (!myObj.exists()) {
+                myObj.createNewFile();
+            }
+            FileWriter myWriter = new FileWriter(dirFile,true);
+            myWriter.write(palabra + "\n");
+            myWriter.close();
+
+
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }

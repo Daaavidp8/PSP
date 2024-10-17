@@ -2,15 +2,19 @@ import org.w3c.dom.TypeInfo;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args){
         Scanner scanner = new Scanner(System.in);
         String palabra = scanner.nextLine();
 
-        File directorio = new File("src");
+        String dir =  System.getProperty("user.dir") + "/Actividades de procesos/Palindromos/";
+
+        File directorio = new File(dir + "src");
         ProcessBuilder pb = new ProcessBuilder("java", "Palindromo.java", palabra);
 
         pb.directory(directorio);
