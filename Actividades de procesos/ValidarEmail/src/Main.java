@@ -1,7 +1,5 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.Objects;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -15,8 +13,9 @@ public class Main {
 
         File directorio = new File("src/");
 
-        while (!valido && intentos < 4){
+        while (!valido && intentos < 3){
 
+            System.out.println("Introduce un email valido. INTENTOS: " + (3 -intentos));
             String email = entrada.nextLine();
 
             ProcessBuilder pb = new ProcessBuilder("java","ValidaMail.java",email);
@@ -24,17 +23,37 @@ public class Main {
 
             try{
                 Process p=pb.start();
-                InputStream is = p.getInputStream();
-                int c;
-                while ((c = is.read()) != -1)
-                    System.out.print((char) c);
-                is.close();
+                OutputStream os = p.getOutputStream();
+                os.write(email.getBytes());
+                os.flush();
+                os.close();
 
-                p.waitFor();
-                valido = p.exitValue() == 0;
+
+                InputStream is = p.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String line = br.readLine();
+
+                InputStream es = p.getErrorStream();
+                BufferedReader bre = new BufferedReader(new InputStreamReader(es));
+                String errLine;
+
+                while ((errLine = bre.readLine()) != null){
+                    System.err.println(errLine);
+                }
+
+                if (Objects.equals(line, "true")){
+                    valido = true;
+                    System.out.println("Email validado correctamente.");
+                }else {
+                    while ((line) != null){
+                        System.out.println(line);
+                        line = br.readLine();
+                    }
+                    is.close();
+                }
 
             }catch(Exception e) {
-                e.getMessage();
+                System.out.println(e.getMessage());
             }
 
             intentos++;
